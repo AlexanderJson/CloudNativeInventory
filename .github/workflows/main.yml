@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-test-container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore CloudNativeInventory.sln
+
+      - name: Build
+        run: dotnet build CloudNativeInventory.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test CloudNativeInventory.sln --configuration Release --no-build
+
+      - name: Build Docker image
+        run: docker build -t cloudnativeinventory-api:${{ github.sha }} .
