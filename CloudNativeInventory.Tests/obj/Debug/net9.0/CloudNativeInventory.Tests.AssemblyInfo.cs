@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudNativeInventory.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e921bb40b0b03684b372f12b79a1b056cc1110fc")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudNativeInventory.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudNativeInventory.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
