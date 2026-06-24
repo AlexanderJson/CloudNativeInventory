@@ -1,17 +1,15 @@
-.git
-.github
-.vs
-.vscode
+**/bin/
+**/obj/
 
-bin
-obj
-TestResults
-coverage
+.git/
+.github/
 
-.env
-*.env
-secrets.json
-appsettings.Development.json
+.vs/
+.vscode/
+
+TestResults/
+**/TestResults/
 
 *.user
 *.suo
+*.cache
