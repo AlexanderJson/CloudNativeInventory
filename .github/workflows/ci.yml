@@ -36,7 +36,7 @@ jobs:
       # Uses global.json so CI uses the same .NET SDK version as the project.
       # The NuGet cache makes restores faster between workflow runs.
       - name: Set up .NET SDK from global.json
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
           cache: true
