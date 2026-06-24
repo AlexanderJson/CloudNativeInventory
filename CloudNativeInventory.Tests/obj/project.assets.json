@@ -2797,6 +2797,9 @@
           "NU1904"
         ]
       },
+      "restoreLockProperties": {
+        "restorePackagesWithLockFile": "true"
+      },
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "high",
