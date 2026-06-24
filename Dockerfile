@@ -4,7 +4,6 @@
 ARG DOTNET_VERSION=9.0
 ARG RUNTIME_TAG=9.0-noble-chiseled
 ARG RUNTIME_DIGEST=sha256:5539e0a2a3c629ccc665b055f0e64aa128a0466c50d136b8cc398a6eac3540ec
-
 # this will be overridden in ci/cd pipeline but is a default build arg
 ARG APP_PORT=8080
 
@@ -13,6 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
 
 ARG BUILD_CONFIGURATION=Release
 ARG API_PROJECT=CloudNativeInventory.Api/CloudNativeInventory.Api.csproj
+ARG PUBLISH_DIR=/app/publish
 
 WORKDIR /src
 
