@@ -17,7 +17,8 @@ ARG API_PROJECT=CloudNativeInventory.Api/CloudNativeInventory.Api.csproj
 WORKDIR /src
 
 # Multi-stage keeps the final image small since we seperate build artifacts from the runtime image. 
-# first stage is to copy the solution COPY ["CloudNativeInventory.sln", "."]
+# first stage is to copy the solution 
+COPY ["CloudNativeInventory.sln", "."]
 COPY ["global.json", "."]
 
 # then all the versions and settings 
