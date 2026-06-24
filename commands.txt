@@ -1,0 +1,2 @@
+hämta sha256:
+docker buildx imagetools inspect mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled

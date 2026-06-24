@@ -1,0 +1,108 @@
+name: cd
+
+# CD runs only after the CI workflow succeeds on main.
+# This ensures deployed code that has not passed restore/build/test/Docker build is stopped
+on:
+  workflow_run:
+    workflows:
+      - ci
+    branches:
+      - main
+    types:
+      - completed
+
+# Least privilege for Azure OIDC login, good security practice!! 
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  BUILD_CONFIGURATION: Release
+  DOTNET_VERSION: "9.0"
+  RUNTIME_TAG: 9.0-noble-chiseled
+  RUNTIME_DIGEST: sha256:5539e0a2a3c629ccc665b055f0e64aa128a0466c50d136b8cc398a6eac3540ec
+  APP_PORT: "8080"
+
+  # The commit that passed CI. CD checks out and deploys this exact commit.
+  COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+
+jobs:
+  deploy:
+    name: Build, push, deploy
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    environment:
+      name: production
+
+    # Prevents two production deployments from running at the same time.
+    concurrency:
+      group: production
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_SHA }}
+
+      # Uses GitHub OIDC  
+      - name: Log in to Azure with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Ensure Azure Container Apps CLI extension exists
+        run: az extension add --name containerapp --upgrade
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name "${{ vars.ACR_NAME }}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the production image and load it into Docker 
+      - name: Build Docker image before push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          load: true
+          tags: |
+            ${{ vars.ACR_LOGIN_SERVER }}/${{ vars.IMAGE_NAME }}:${{ env.COMMIT_SHA }}
+            ${{ vars.ACR_LOGIN_SERVER }}/${{ vars.IMAGE_NAME }}:main
+          build-args: |
+            DOTNET_VERSION=${{ env.DOTNET_VERSION }}
+            RUNTIME_TAG=${{ env.RUNTIME_TAG }}
+            RUNTIME_DIGEST=${{ env.RUNTIME_DIGEST }}
+            APP_PORT=${{ env.APP_PORT }}
+            BUILD_CONFIGURATION=${{ env.BUILD_CONFIGURATION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push Docker image to Azure Container Registry
+        run: |
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/${{ vars.IMAGE_NAME }}:${{ env.COMMIT_SHA }}"
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/${{ vars.IMAGE_NAME }}:main"
+
+      - name: Deploy image to Azure Container Apps
+        run: |
+          az containerapp update \
+            --name "${{ vars.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ vars.RESOURCE_GROUP }}" \
+            --image "${{ vars.ACR_LOGIN_SERVER }}/${{ vars.IMAGE_NAME }}:${{ env.COMMIT_SHA }}"
+
+      # verifies Azure is serving the new app revision.
+      - name: Verify deployed health endpoint
+        run: |
+          fqdn=$(az containerapp show \
+            --name "${{ vars.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ vars.RESOURCE_GROUP }}" \
+            --query "properties.configuration.ingress.fqdn" \
+            --output tsv)
+
+          curl --fail --retry 12 --retry-delay 10 --retry-all-errors "https://${fqdn}/health/live"

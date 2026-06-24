@@ -1,0 +1,76 @@
+name: ci
+
+# CI runs on pull requests and pushes to main.
+# Pull requests prove the code is safe before merge.
+# Pushes to main prove the exact merged commit is safe before CD deploys it.
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# Least privilege: CI only needs to read the repository.
+permissions:
+  contents: read
+
+env:
+  BUILD_CONFIGURATION: Release
+  IMAGE_NAME: cloudnativeinventory-api
+  DOTNET_VERSION: "9.0"
+  RUNTIME_TAG: 9.0-noble-chiseled
+  RUNTIME_DIGEST: sha256:5539e0a2a3c629ccc665b055f0e64aa128a0466c50d136b8cc398a6eac3540ec
+  APP_PORT: "8080"
+
+jobs:
+  verify:
+    name: Restore, build, test, containerize
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Uses global.json so CI uses the same .NET SDK version as the project.
+      # The NuGet cache makes restores faster between workflow runs.
+      - name: Set up .NET SDK from global.json
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      # Locked mode ensures CI restores the exact dependency graph from packages.lock.json.
+      - name: Restore NuGet packages in locked mode
+        run: dotnet restore CloudNativeInventory.sln --locked-mode
+
+      - name: Build solution
+        run: dotnet build CloudNativeInventory.sln --configuration "$BUILD_CONFIGURATION" --no-restore
+
+      - name: Test solution
+        run: dotnet test CloudNativeInventory.sln --configuration "$BUILD_CONFIGURATION" --no-build --verbosity normal
+
+      # Buildx gives us better Docker build support and GitHub Actions layer caching.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # This proves the Dockerfile works before anything is deployed.
+      # push:false means CI only builds the image locally inside the runner.
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          build-args: |
+            DOTNET_VERSION=${{ env.DOTNET_VERSION }}
+            RUNTIME_TAG=${{ env.RUNTIME_TAG }}
+            RUNTIME_DIGEST=${{ env.RUNTIME_DIGEST }}
+            APP_PORT=${{ env.APP_PORT }}
+            BUILD_CONFIGURATION=${{ env.BUILD_CONFIGURATION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

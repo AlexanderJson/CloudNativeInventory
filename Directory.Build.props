@@ -1,0 +1,13 @@
+<!-- This file defines the .NET settings used across the full SLN. Just nice way to centralize the .NET config-->
+
+<Project>
+  <PropertyGroup>
+    <RequiredTargetFramework>net9.0</RequiredTargetFramework>
+    <TargetFramework>$(RequiredTargetFramework)</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+</Project>

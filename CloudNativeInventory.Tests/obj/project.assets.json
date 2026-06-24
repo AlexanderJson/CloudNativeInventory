@@ -1106,7 +1106,7 @@
           "Azure.Extensions.AspNetCore.Configuration.Secrets": "1.5.1",
           "Azure.Identity": "1.21.0",
           "Microsoft.AspNetCore.OpenApi": "9.0.17",
-          "Microsoft.EntityFrameworkCore.InMemory": "9.0.0"
+          "Microsoft.EntityFrameworkCore.InMemory": "9.0.17"
         },
         "compile": {
           "bin/placeholder/CloudNativeInventory.Api.dll": {}
@@ -2741,7 +2741,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "CloudNativeInventory.Api >= 1.0.0",
-      "Microsoft.EntityFrameworkCore.InMemory >= 9.*",
+      "Microsoft.EntityFrameworkCore.InMemory >= 9.0.17",
       "Microsoft.NET.Test.Sdk >= 17.12.0",
       "Moq >= 4.20.72",
       "coverlet.collector >= 6.0.2",
@@ -2762,6 +2762,8 @@
       "packagesPath": "C:\\Users\\Alexa\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Alexa\\Desktop\\skola\\vv\\CloudNativeInventory.Tests\\obj\\",
       "projectStyle": "PackageReference",
+      "centralPackageVersionsManagementEnabled": true,
+      "CentralPackageTransitivePinningEnabled": true,
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
@@ -2788,13 +2790,16 @@
         }
       },
       "warningProperties": {
+        "allWarningsAsErrors": true,
         "warnAsError": [
-          "NU1605"
+          "NU1605",
+          "NU1903",
+          "NU1904"
         ]
       },
       "restoreAuditProperties": {
         "enableAudit": "true",
-        "auditLevel": "low",
+        "auditLevel": "high",
         "auditMode": "direct"
       },
       "SdkAnalysisLevel": "9.0.300"
@@ -2805,28 +2810,45 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
-            "version": "[9.*, )"
+            "version": "[9.0.17, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
-            "version": "[17.12.0, )"
+            "version": "[17.12.0, )",
+            "versionCentrallyManaged": true
           },
           "Moq": {
             "target": "Package",
-            "version": "[4.20.72, )"
+            "version": "[4.20.72, )",
+            "versionCentrallyManaged": true
           },
           "coverlet.collector": {
             "target": "Package",
-            "version": "[6.0.2, )"
+            "version": "[6.0.2, )",
+            "versionCentrallyManaged": true
           },
           "xunit": {
             "target": "Package",
-            "version": "[2.9.2, )"
+            "version": "[2.9.2, )",
+            "versionCentrallyManaged": true
           },
           "xunit.runner.visualstudio": {
             "target": "Package",
-            "version": "[2.8.2, )"
+            "version": "[2.8.2, )",
+            "versionCentrallyManaged": true
           }
+        },
+        "centralPackageVersions": {
+          "Azure.Extensions.AspNetCore.Configuration.Secrets": "1.5.1",
+          "Azure.Identity": "1.21.0",
+          "coverlet.collector": "6.0.2",
+          "Microsoft.AspNetCore.OpenApi": "9.0.17",
+          "Microsoft.EntityFrameworkCore.InMemory": "9.0.17",
+          "Microsoft.NET.Test.Sdk": "17.12.0",
+          "Moq": "4.20.72",
+          "xunit": "2.9.2",
+          "xunit.runner.visualstudio": "2.8.2"
         },
         "imports": [
           "net461",
@@ -2845,6 +2867,22 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "centralTransitiveDependencyGroups": {
+    "net9.0": {
+      "Azure.Extensions.AspNetCore.Configuration.Secrets": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[1.5.1, )"
+      },
+      "Azure.Identity": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[1.21.0, )"
+      },
+      "Microsoft.AspNetCore.OpenApi": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[9.0.17, )"
       }
     }
   }

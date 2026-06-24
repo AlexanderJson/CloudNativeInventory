@@ -1,0 +1,38 @@
+<Project>
+  <Target Name="BuildInfo" AfterTargets="Build">
+    <Message Text="Built $(MSBuildProjectName) ($(Configuration)) targeting $(TargetFramework)" Importance="high" />
+  </Target>
+
+  <Target Name="EnforceRepoStandards" BeforeTargets="Build">
+    <Error Condition="'$(TargetFramework)' != '$(RequiredTargetFramework)' AND '$(IsAnalyzerProject)' != 'true'"
+           Text="Standard violation: $(MSBuildProjectName) targets $(TargetFramework), but this repo requires $(RequiredTargetFramework)." />
+  </Target>
+
+  <Target Name="NoDebugInCI" BeforeTargets="Build">
+    <Error Condition="'$(CI)' == 'true' AND '$(Configuration)' != 'Release'"
+           Text="CI must run Release builds only. Use dotnet build --configuration Release." />
+  </Target>
+
+  <Target Name="NoSecretsFilesInProjectRoot" BeforeTargets="Build">
+    <Error Condition="Exists('secrets.json') OR Exists('.env')"
+           Text="Secret files must not exist in the project root. Use User Secrets locally and Azure Key Vault/Container App secrets in Azure." />
+  </Target>
+
+  <Target Name="NoTestPackagesInNonTestProjects" BeforeTargets="Build">
+    <ItemGroup>
+      <_ForbiddenTestPackageReference Include="@(PackageReference)"
+                                      Condition="'%(PackageReference.Identity)' == 'xunit' OR
+                                                 '%(PackageReference.Identity)' == 'xunit.runner.visualstudio' OR
+                                                 '%(PackageReference.Identity)' == 'Microsoft.NET.Test.Sdk' OR
+                                                 '%(PackageReference.Identity)' == 'coverlet.collector'" />
+    </ItemGroup>
+
+    <Error Condition="'$(IsTestProject)' != 'true' AND '@(_ForbiddenTestPackageReference)' != ''"
+           Text="Test packages are only allowed in test projects. Remove test-only PackageReference(s) from $(MSBuildProjectName): @(_ForbiddenTestPackageReference)." />
+  </Target>
+
+  <Target Name="EnsureTestsExist" AfterTargets="Build" Condition="'$(IsTestProject)' == 'true'">
+    <Error Condition="'@(Compile)' == ''"
+           Text="Test project $(MSBuildProjectName) has no compiled test source files." />
+  </Target>
+</Project>

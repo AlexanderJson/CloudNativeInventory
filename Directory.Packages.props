@@ -1,0 +1,24 @@
+<!-- This file defines the package versions used across the SLN. Nice way to centralize plus it ensures packages are actually consistent! especially important with containerization and CI/CD pipelines -->
+
+<Project>
+  <PropertyGroup>
+    <!-- The packages this project uses can still depend on other packages.
+         This ensures even transitive dependencies stay consistent. -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.17" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.17" />
+
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+</Project>
+
