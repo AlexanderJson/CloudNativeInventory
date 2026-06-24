@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Uses global.json so CI uses the same .NET SDK version as the project.
       # The NuGet cache makes restores faster between workflow runs.
