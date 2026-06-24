@@ -11,7 +11,7 @@ on:
     branches:
       - main
 
-# Least privilege: CI only needs to read the repository.
+# Least privilege again: CI only needs to read the repository.
 permissions:
   contents: read
 
@@ -52,12 +52,10 @@ jobs:
       - name: Test solution
         run: dotnet test CloudNativeInventory.sln --configuration "$BUILD_CONFIGURATION" --no-build --verbosity normal
 
-      # Buildx gives us better Docker build support and GitHub Actions layer caching.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       # This proves the Dockerfile works before anything is deployed.
-      # push:false means CI only builds the image locally inside the runner.
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
