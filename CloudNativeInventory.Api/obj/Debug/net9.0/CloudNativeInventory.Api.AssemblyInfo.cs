@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudNativeInventory.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71e5c4e5967e27e1180d857eeb7a68cce2518fe9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00cd512f0ccc93acfe73a8cef420afbdc0c38a80")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudNativeInventory.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudNativeInventory.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

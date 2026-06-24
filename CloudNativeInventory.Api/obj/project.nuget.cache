@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LNIKdvEzDKs=",
+  "dgSpecHash": "DEXIYjYWYSM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alexa\\Desktop\\skola\\vv\\CloudNativeInventory.Api\\CloudNativeInventory.Api.csproj",
+  "projectFilePath": "C:\\Users\\Alexa\\Desktop\\skola\\vv\\CloudNativeInventory.api\\CloudNativeInventory.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alexa\\.nuget\\packages\\azure.core\\1.54.0\\azure.core.1.54.0.nupkg.sha512",
     "C:\\Users\\Alexa\\.nuget\\packages\\azure.extensions.aspnetcore.configuration.secrets\\1.5.1\\azure.extensions.aspnetcore.configuration.secrets.1.5.1.nupkg.sha512",
