@@ -57,7 +57,7 @@ jobs:
 
       # This proves the Dockerfile works before anything is deployed.
       - name: Build Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
